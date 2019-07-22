@@ -1,0 +1,21 @@
+{
+  "name": "express-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "diamond": "node extra/patterns/diamond.js",
+    "equilateral": "node extra/patterns/equilateral.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vishalnirwan1/express-server.git"
+  },
+  "author": "Vishal Nirwan",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vishalnirwan1/express-server/issues"
+  },
+  "homepage": "https://github.com/vishalnirwan1/express-server#readme"
+}
