@@ -6,7 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "diamond": "node extra/patterns/diamond.js",
-    "equilateral": "node extra/patterns/equilateral.js"
+    "equilateral": "node extra/patterns/equilateral.js",
+    "validation": "node extra/utils/validation.js",
+    "permissions": "node extra/utils/permissions.js"
   },
   "repository": {
     "type": "git",

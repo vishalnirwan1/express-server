@@ -1,14 +1,14 @@
-var n = process.argv[2];
+let n = process.argv[2];
 equilateral_triangle(n);
 
 function equilateral_triangle(num)
 {
-    var space = num-1;
-   var str = "";
-   var i,j;
-    for( i=0;i<num;i++)
+    let space = num-1;
+    let str   = "";
+    let i,j;
+    for( i = 0;i < num;i++)
     {
-        for( j=0;j<space;j++)
+        for( j = 0;j < space;j++)
         {
             str += " ";
         }
