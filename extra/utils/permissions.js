@@ -1,17 +1,7 @@
-/* eslint-disable no-console */
 /* eslint-disable no-else-return */
-const permissions = {
-  getUsers: {
-    all: ['head-trainer'],
-    read: ['trainee', 'trainer'],
-    write: ['trainer'],
-    delete: [],
-  },
-};
+import { permissions } from '../constants';
 
-console.log(hasPermission('getUsers', 'head-trainer', 'delete'));
-
-function hasPermission(moduleName, role, permissionType) {
+export default function hasPermission(moduleName, role, permissionType) {
   if (moduleName in permissions) {
     if (permissionType in permissions[moduleName]) {
       if (permissions[moduleName][permissionType].includes(role)) {
@@ -21,9 +11,8 @@ function hasPermission(moduleName, role, permissionType) {
         return true;
       }
       return false;
-    } else {
-      return false;
     }
+    return false;
   } else {
     return false;
   }

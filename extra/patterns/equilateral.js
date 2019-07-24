@@ -1,10 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-plusplus */
-/* eslint-disable no-use-before-define */
-const n = process.argv[2];
-equilateralTriangle(n);
 
-function equilateralTriangle(num) {
+export default function equilateralTriangle(num) {
   let space = num - 1;
   let str = '';
   let i; let j;

@@ -1,10 +1,6 @@
 /* eslint-disable no-console */
-/* eslint-disable no-use-before-define */
 /* eslint-disable no-plusplus */
-const n = process.argv[2];
-diamondTriangle(n);
-
-function diamondTriangle(num) {
+export default function diamondTriangle(num) {
   let space = num - 1;
   let str = '';
   let i; let j;
