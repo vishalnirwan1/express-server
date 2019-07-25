@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 /* eslint-disable no-plusplus */
+import { IUsers } from '../interfaces';
 import { validateEmail } from './helper';
 
-export default function validateUsers(user) {
+export default function validateUsers(user: IUsers[]) {
   let correct: number = 0;
   let incorrect: number = 0;
   const emailArr: string[] = [];

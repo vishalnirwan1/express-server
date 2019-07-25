@@ -7,3 +7,6 @@ export interface IGetUsers {
 export interface IPermissions {
     [key: string]: IGetUsers;
 }
+export interface IUsers {
+      reviewerEmail: string; traineeEmail: string;
+}
