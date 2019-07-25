@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 /* eslint-disable no-plusplus */
 
+// eslint-disable-next-line import/prefer-default-export
 export default function equilateralTriangle(num) {
   let space = num - 1;
   let str = '';
