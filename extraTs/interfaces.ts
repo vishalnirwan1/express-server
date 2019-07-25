@@ -5,5 +5,5 @@ export interface IGetUsers {
     delete: undefined[];
 }
 export interface IPermissions {
-    [key: string] : IGetUsers
-};
+    [key: string]: IGetUsers;
+}
