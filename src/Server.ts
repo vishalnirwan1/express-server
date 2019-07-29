@@ -24,7 +24,7 @@ export default class Server {
             res.send( 'I am Ok' );
        });
         app.use(middle1);
-        app.use('/api', middle2);
+        app.use(middle2);
         return this;
     }
        public run() {
