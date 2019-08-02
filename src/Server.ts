@@ -8,12 +8,12 @@ const app = express();
 
 export default class Server {
     constructor(private config) {
-        this.setupRoutes();
+        // this.setupRoutes();
         this.run();
      }
     public bootstrap() {
-        this.setupRoutes();
         this.initBodyParser();
+        this.setupRoutes();
         return this;
     }
     public setupRoutes() {
