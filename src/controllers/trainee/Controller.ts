@@ -4,7 +4,7 @@ class TraineeController {
         console.log('inside get trainee');
         res.send([
             {
-            name: 'fake response',
+                name: 'fake response',
             },
         ]);
     }

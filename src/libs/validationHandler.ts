@@ -7,20 +7,32 @@ const validationHandler = (config) => (req, res, next) => {
                     const value = req.body[bodyKey1];
                     if (bodyKey1 === 'id') {
                         if (!value) {
-                            next(bodyKey1 + ' is required');
+                            next({
+                                error: bodyKey1 + ' is required',
+                                status: 404,
+                            });
                         }
                         if (!(typeof (value) === 'string')) {
-                            next('invalid ' + bodyKey1);
+                            next({
+                                error: 'invalid ' + bodyKey1,
+                                status: 403,
+                            });
                         }
                     }
                     else if (bodyKey1 === 'name') {
                         if (!value) {
-                            next(config.name.errorMessage);
+                            next({
+                                error: config.name.errorMessage,
+                                status: 404,
+                            });
                         }
                     }
                 }
                 else {
-                    next('not found post');
+                    next({
+                        error: 'not found post',
+                        status: 404,
+                    });
                 }
             });
             break;
@@ -32,17 +44,26 @@ const validationHandler = (config) => (req, res, next) => {
                     console.log(value);
                     if (queryKey1 === 'skip') {
                         if (isNaN(value)) {
-                            next(config.skip.errorMessage);
+                            next({
+                                error: config.skip.errorMessage,
+                                status: 403,
+                            });
                         }
                     }
                     else if (queryKey1 === 'limit') {
                         if (isNaN(value)) {
-                            next(config.limit.errorMessage);
+                            next({
+                                error: config.limit.errorMessage,
+                                status: 403,
+                            });
                         }
                     }
                 }
                 else {
-                    next('not found get');
+                    next({
+                        error: 'not found get',
+                        status: 404,
+                    });
                 }
             });
             break;
@@ -53,20 +74,32 @@ const validationHandler = (config) => (req, res, next) => {
                     const value = req.body[bodyKey1];
                     if (bodyKey1 === 'id') {
                         if (!value) {
-                            next(bodyKey1 + ' is required');
+                            next({
+                                error: bodyKey1 + ' is required',
+                                status: 404,
+                            });
                         }
                         if (!(typeof (value) === 'string')) {
-                            next('invalid ' + bodyKey1);
+                            next({
+                                error: 'invalid ' + bodyKey1,
+                                status: 403,
+                            });
                         }
                     }
                     else if (bodyKey1 === 'dataToUpdate') {
                         if (!value) {
-                            next(bodyKey1 + ' is required');
+                            next({
+                                error: bodyKey1 + ' is required',
+                                status: 404,
+                            });
                         }
                     }
                 }
                 else {
-                    next('not found put');
+                    next({
+                        error: 'not found put',
+                        status: 404,
+                    });
                 }
             });
             break;
@@ -77,12 +110,18 @@ const validationHandler = (config) => (req, res, next) => {
                     const value = req.body[bodyKey1];
                     if (bodyKey1 === 'id') {
                         if (!value) {
-                            next(config.id.errorMessage);
+                            next({
+                                error: config.id.errorMessage,
+                                status: 404,
+                            });
                         }
                     }
                 }
                 else {
-                    next('not found delete');
+                    next({
+                        error: 'not found delete',
+                        status: 404,
+                    });
                 }
             });
             break;
