@@ -3,66 +3,66 @@ const validation = {
     {
         id:
         {
+            required: true,
             custom: (value) => {
                 console.log('Value', value);
                 throw { error: 'Error Occured', message: 'Message' };
             },
             in: ['body'],
-            required: true,
             string: true,
         },
         name:
         {
+            required: true,
             errorMessage: 'Name is required',
             in: ['body'],
-            regex: '',
-            required: true,
+            regex: '^[a-zA-Z_]+$',
         },
     },
     delete:
     {
         id:
         {
+            required: true,
             errorMessage: 'Id is required',
             in: ['params'],
-            required: true,
         },
     },
     get:
     {
         limit:
         {
+            required: false,
             default: 10,
             errorMessage: 'Limit is invalid',
             in: ['query'],
             number: true,
-            required: false,
         },
         skip:
         {
+            required: false,
             default: 0,
             errorMessage: 'Skip is invalid',
             in: ['query'],
             number: true,
-            required: false,
         },
     },
     update:
     {
         dataToUpdate:
         {
+            required: true,
             custom: (dataToUpdate) => {
                 console.log('Value', dataToUpdate);
                 throw { error: 'Error Occured', message: 'Message' };
             },
             in: ['body'],
             isObject: true,
-            required: true,
         },
         id:
         {
-            in: ['body'],
             required: true,
+            in: ['body'],
             string: true,
         },
     },

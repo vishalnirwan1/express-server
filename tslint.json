@@ -43,6 +43,8 @@
     ],
     
     "no-var-keyword": true,
+
+    "object-literal-sort-keys": false,
     
     "quotemark": [
     

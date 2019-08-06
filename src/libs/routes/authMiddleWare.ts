@@ -12,7 +12,7 @@ export default (moduleName, permissionType) => (req, res, next) => {
         } else {
             next({
                 error: 'Unauthorised Access',
-                status: 403,
+                status: 401,
             });
         }
     }
