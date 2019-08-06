@@ -1,10 +1,11 @@
 import { Request, Response } from 'express';
+// import { validationHandler } from '../../libs';
 class TraineeController {
     public get(req: Request, res: Response) {
         console.log('inside get trainee');
         res.send([
             {
-            name: 'fake response',
+                name: 'fake response',
             },
         ]);
     }
@@ -12,8 +13,8 @@ class TraineeController {
         console.log('inside create trainee');
         res.send({
             data: {
-                id: 1,
-                name: 'Vishal',
+                id: req.body.id,
+                name: req.body.name,
             },
             message: 'trainee create successful',
             status: 'ok',
@@ -23,8 +24,8 @@ class TraineeController {
         console.log('inside update trainee');
         res.send({
             data: {
-                id: 1,
-                name: 'Vishal',
+                id: req.body.id,
+                name: req.body.dataToUpdate.name,
             },
             message: 'trainee update successful',
             status: 'ok',
@@ -34,8 +35,8 @@ class TraineeController {
         console.log('inside delete trainee');
         res.send({
             data: {
-                id: 1,
-                name: 'Vishal',
+                id: req.params.id,
+                name: req.params.name,
             },
             message: 'trainee delete successful',
             status: 'ok',
