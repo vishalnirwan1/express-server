@@ -7,6 +7,7 @@ const configuration: IConfig = Object.freeze({
     port: enVars.PORT,
     secretKey: enVars.SECRET_KEY,
     mongoUri: enVars.MONGO_URL,
+    password: enVars.PASSWORD,
 });
 console.log('config is ::::: ', configuration);
 export default configuration;

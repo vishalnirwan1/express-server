@@ -20,5 +20,8 @@ export default class UserRepository {
     public delete(data) {
         return UserModel.deleteMany(data);
     }
+    public findOne(query) {
+        return UserModel.findOne(query).lean();
+    }
 
 }
