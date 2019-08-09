@@ -11,6 +11,10 @@ export default class UserSchema extends mongoose.Schema {
                 reuqired: true,
                 type: String,
             },
+            password: {
+                required: true,
+                type: String,
+            },
         };
         super(baseSchema, option);
     }
