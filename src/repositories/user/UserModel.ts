@@ -15,7 +15,7 @@ export const userSchema = new UserSchema({
     toJson: toConvert,
     toObject: toConvert,
 });
-export const UserModel: mongoose.Model<IUserModel> = mongoose.model<IUserModel>(
+export const userModel: mongoose.Model<IUserModel> = mongoose.model<IUserModel>(
     'User',
     userSchema,
     'Users',

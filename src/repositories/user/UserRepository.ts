@@ -1,27 +1,29 @@
 import * as mongoose from 'mongoose';
+import VersionableRepository from '../versionable/VersionableRepository';
 import IUserModel from './IUserModel';
-import { UserModel } from './UserModel';
+import { userModel } from './UserModel';
 // import { IQueryGet } from '../user/entities'
 
-export default class UserRepository {
-    public UserModel;
+export default class UserRepository extends VersionableRepository<IUserModel, mongoose.Model<IUserModel>> {
+    public userModel;
     constructor() {
-        this.UserModel = UserModel;
+        console.log('>>>>>>hihihih', userModel)
+        super(userModel);
     }
     public get(query, projection, option) {
-        return UserModel.find(query, projection, option);
+        return userModel.find(query, projection, option);
     }
     public update(query, dataToUpdate) {
-        return UserModel.update(query, dataToUpdate);
+        return userModel.update(query, dataToUpdate);
     }
     public create(data) {
-        return UserModel.create(data);
+        return super.create(data);
     }
     public delete(data) {
-        return UserModel.deleteMany(data);
+        return userModel.deleteMany(data);
     }
     public findOne(query) {
-        return UserModel.findOne(query).lean();
+        return userModel.findOne(query).lean();
     }
 
 }
