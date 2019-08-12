@@ -13,14 +13,14 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
 
     public async create(options): Promise<D> {
         const id = VersionableRepository.generateObjectId();
-        const addUser = { 
+        const addUser = {
             ...options,
             _id: id,
             createdBy: options.userId,
             originalId: id,
-            updatedBy: options.userId
-        }
-        console.log('imp data', addUser, typeof id, );
+            updatedBy: options.userId,
+        };
+        console.log('imp data', addUser, typeof id);
         // this.modelType.save(addUser)
         const model = new this.modelType(addUser);
         return model.save().then((record) => record.toObject());

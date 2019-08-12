@@ -7,7 +7,7 @@ import { userModel } from './UserModel';
 export default class UserRepository extends VersionableRepository<IUserModel, mongoose.Model<IUserModel>> {
     public userModel;
     constructor() {
-        console.log('>>>>>>hihihih', userModel)
+        console.log('>>>>>>hihihih', userModel);
         super(userModel);
     }
     public get(query, projection, option) {
