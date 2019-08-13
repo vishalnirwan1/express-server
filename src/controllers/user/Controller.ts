@@ -38,7 +38,6 @@ class UserController {
     }
     public updateUser(req, res, next) {
         userRepository.update({ _id: req.body.id }, req.body.dataToUpdate)
-            // console.log(updateMessage);
             .then((ressss) => {
                 if (ressss === 'user not found') {
                     next({

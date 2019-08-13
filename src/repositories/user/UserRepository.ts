@@ -5,7 +5,6 @@ import { userModel } from './UserModel';
 // import { IQueryGet } from '../user/entities'
 
 export default class UserRepository extends VersionableRepository<IUserModel, mongoose.Model<IUserModel>> {
-    // public userModel;
     constructor() {
         super(userModel);
     }
@@ -21,8 +20,4 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
     public delete(data) {
         return super.delete(data);
     }
-    // public findOne(query) {
-    //     return userModel.findOne(query).lean();
-    // }
-
 }
