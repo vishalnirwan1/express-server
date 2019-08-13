@@ -5,25 +5,24 @@ import { userModel } from './UserModel';
 // import { IQueryGet } from '../user/entities'
 
 export default class UserRepository extends VersionableRepository<IUserModel, mongoose.Model<IUserModel>> {
-    public userModel;
+    // public userModel;
     constructor() {
-        console.log('>>>>>>hihihih', userModel);
         super(userModel);
     }
-    public get(query, projection, option) {
-        return userModel.find(query, projection, option);
+    public get(query) {
+        return super.find(query);
     }
     public update(query, dataToUpdate) {
-        return userModel.update(query, dataToUpdate);
+        return super.update(query, dataToUpdate);
     }
     public create(data) {
         return super.create(data);
     }
     public delete(data) {
-        return userModel.deleteMany(data);
+        return super.delete(data);
     }
-    public findOne(query) {
-        return userModel.findOne(query).lean();
-    }
+    // public findOne(query) {
+    //     return userModel.findOne(query).lean();
+    // }
 
 }

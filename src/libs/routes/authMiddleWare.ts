@@ -9,22 +9,22 @@ export default (moduleName, permissionType) => (req, res, next) => {
         const token = req.headers.authorization;
         const userInfo = jwt.verify(token, configuration.secretKey);
         const role = userInfo.role;
-        userRepository.findOne({ _id: userInfo._id })
+        userRepository.get({ originalId: userInfo.originalId, deletedAt: { $exists: false } })
             .then((user) => {
                 if (!user) {
                     next(' User does not exist');
                 }
                 console.log('user is ---->', user);
                 req.user = user;
-                // if (hasPermission(moduleName, role, permissionType)) {
-                next();
+                if (hasPermission(moduleName, role, permissionType)) {
+                    next();
 
-                // } else {
-                //     next({
-                //         error: 'Unauthorised Access',
-                //         status: 401,
-                //     });
-                // }
+                } else {
+                    next({
+                        error: 'Unauthorised Access',
+                        status: 401,
+                    });
+                }
             });
     }
     catch (err) {

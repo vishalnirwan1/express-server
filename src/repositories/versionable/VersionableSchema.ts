@@ -9,6 +9,7 @@ export default class VersionableSchema extends mongoose.Schema {
                 type: Date,
             },
             createdBy: {
+                default: 'Vishal Nirwan',
                 required: true,
                 type: String,
             },
@@ -26,6 +27,7 @@ export default class VersionableSchema extends mongoose.Schema {
                 type: Date,
             },
             updatedBy: {
+                default: 'Vishal Nirwan',
                 required: true,
                 type: String,
             },
@@ -33,6 +35,7 @@ export default class VersionableSchema extends mongoose.Schema {
                 required: false,
                 type: String,
             },
+            ...option,
         });
         super(versionSchema, option);
     }
