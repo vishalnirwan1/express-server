@@ -14,7 +14,6 @@ export default (moduleName, permissionType) => (req, res, next) => {
                 if (!user) {
                     next(' User does not exist');
                 }
-                console.log('user is ---->', user);
                 req.user = user;
                 if (hasPermission(moduleName, role, permissionType)) {
                     next();

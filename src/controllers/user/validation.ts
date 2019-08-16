@@ -1,16 +1,6 @@
 const validation = {
     create:
     {
-        // id:
-        // {
-        //     required: true,
-        //     custom: (value) => {
-        //         console.log('Value', value);
-        //         throw { error: 'Error Occured', message: 'Message' };
-        //     },
-        //     in: ['body'],
-        //     string: true,
-        // },
         email:
         {
             required: true,
@@ -23,14 +13,6 @@ const validation = {
             required: true,
             errorMessage: 'password is required',
             in: ['body'],
-            // regex: '^[a-zA-Z_]+$',
-        },
-        name:
-        {
-            required: true,
-            errorMessage: 'Name is required',
-            in: ['body'],
-            regex: '^[a-zA-Z].*[\s\.]*$',
         },
     },
     delete:

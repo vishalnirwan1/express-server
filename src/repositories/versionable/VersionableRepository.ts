@@ -25,41 +25,39 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
     }
     public async update(id, options) {
         let originalData;
-        const findUpdate = await this.modelType.findOne({ originalId: id, deletedAt: { $exists: false } }).lean()
-            .then((data) => {
-                if (!data) {
-                    throw new Error('user not found for uodate');
-                }
-                originalData = data;
-            })
-            .then(() => {
-                const id = VersionableRepository.generateObjectId();
+        try {
+            console.log(id, options);
+            const findUpdate = await this.modelType.findOne({ originalId: id, deletedAt: { $exists: false } }).lean();
+            console.log(findUpdate);
+            if (!findUpdate) {
+                return 'user not found for update';
+            } else {
+                originalData = findUpdate;
+                const newId = VersionableRepository.generateObjectId();
                 const modelCreate = new this.modelType({
                     ...originalData,
                     ...options,
-                    _id: id,
+                    _id: newId,
                 });
-                return this.modelType.create(modelCreate).then((record) => record.toObject());
-            })
-            .then(() => {
-                const newId = originalData._id;
+                await this.modelType.create(modelCreate).then((record) => record.toObject());
+                const newestId = originalData._id;
                 const modelUpdate = new this.modelType({
                     ...originalData,
                     deletedAt: Date.now(),
                 });
                 console.log(modelUpdate);
-                return this.modelType.updateOne({ _id: newId }, modelUpdate);
-            })
-            .catch((err) => {
-                return err;
-            });
-        return findUpdate;
+                return this.modelType.updateOne({ _id: newestId }, modelUpdate);
+            }
+        } catch (err) {
+            return err;
+        }
+
     }
     public async delete(id) {
         let originalData;
         const findDelete = await this.modelType.findOne({ originalId: id, deletedAt: { $exists: false } }).lean();
         if (!findDelete) {
-            throw new Error('user not found in delete');
+            return 'user not found in delete';
         }
         else {
             originalData = findDelete;
@@ -74,5 +72,8 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
     }
     public async find(query) {
         return this.modelType.findOne(query).lean();
+    }
+    public async findAll(query, options) {
+        return this.modelType.find(query, undefined, options).populate('password').lean();
     }
 }
