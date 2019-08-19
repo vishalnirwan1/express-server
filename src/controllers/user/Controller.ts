@@ -7,9 +7,8 @@ import UserRepository from '../../repositories/user/UserRepository';
 const userRepository = new UserRepository();
 class UserController {
     public login(req, res, next) {
-        console.log('inside login -----', req.body);
         const { email, password } = req.body;
-        userRepository.findOne({ email })
+        userRepository.get({ email, deletedAt: { $exists: false } })
             .then((user) => {
                 if (!user) {
                     return next('user not founddd ');
@@ -21,7 +20,6 @@ class UserController {
                 }
                 const token = jwt.sign(user, configuration.secretKey);
                 console.log('token is -----', token);
-                console.log('user is ----', user);
                 res.send({
                     status: 'ok',
                     message: 'login successful',
@@ -32,54 +30,53 @@ class UserController {
             });
     }
     public fetchUser(req, res) {
-        console.log('user in controller --->', req.user);
         res.send({
             status: 'ok',
             message: 'user fetched successfully',
             data: req.user,
         });
     }
+    public updateUser(req, res, next) {
+        userRepository.update({ _id: req.body.id }, req.body.dataToUpdate)
+            .then((ressss) => {
+                if (ressss === 'user not found') {
+                    next({
+                        message: ressss,
+                        status: '404',
+                    });
+                } else {
+                    res.send({
+                        data: req.body.dataToUpdate,
+                        message: 'user updated succesfully',
+                        status: '200',
+                    });
+                }
+            });
+    }
+    public deleteUser(req, res, next) {
+        userRepository.delete({ _id: req.params.id })
+            .then((result) => {
+                if (result === 'user not found in delete') {
+                    next({
+                        message: result,
+                        status: '404',
+                    });
+                } else {
+                    res.send({
+                        data: req.params.id,
+                        message: 'user deleted succesfully',
+                        status: '200',
+                    });
+                }
+            })
+            .catch((err) => {
+                res.send({
+                    error: err,
+                    message: 'data could not be deleted',
+                    status: 400,
+                });
+            });
+    }
 }
 const userController = new UserController();
 export default userController;
-    // public get(req: Request, res: Response) {
-    //     console.log('inside get user');
-    //     res.send([
-    //         {
-    //             name: 'fake response user',
-    //         },
-    //     ]);
-    // }
-    // public create(req: Request, res: Response) {
-    //     console.log('inside create user');
-    //     res.send({
-    //         data: {
-    //             id: req.body.id,
-    //             name: req.body.name,
-    //         },
-    //         message: 'user create successful',
-    //         status: 'ok',
-    //     });
-    // }
-    // public update(req: Request, res: Response) {
-    //     console.log('inside update user');
-    //     res.send({
-    //         data: {
-    //             id: req.body.id,
-    //             name: req.body.dataToUpdate.name,
-    //         },
-    //         message: 'user update successful',
-    //         status: 'ok',
-    //     });
-    // }
-    // public delete(req: Request, res: Response) {
-    //     console.log('inside delete user');
-    //     res.send({
-    //         data: {
-    //             id: req.params.id,
-    //             name: req.params.name,
-    //         },
-    //         message: 'user delete successful',
-    //         status: 'ok',
-    //     });
-    // }
