@@ -1,5 +1,4 @@
 import * as mongoose from 'mongoose';
-// import UserRepository from '../user/UserRepository';
 
 export default class VersionableRepository<D extends mongoose.Document, M extends mongoose.Model<D>> {
     public static generateObjectId() {
@@ -21,14 +20,13 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
             updatedBy: options.userId,
 
         };
-        return this.modelType.create(model).then((record) => record.toObject());
+        const record = await this.modelType.create(model);
+        return record.toObject();
     }
     public async update(id, options) {
         let originalData;
         try {
-            console.log(id, options);
             const findUpdate = await this.modelType.findOne({ originalId: id, deletedAt: { $exists: false } }).lean();
-            console.log(findUpdate);
             if (!findUpdate) {
                 return 'user not found for update';
             } else {
@@ -39,13 +37,13 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
                     ...options,
                     _id: newId,
                 });
-                await this.modelType.create(modelCreate).then((record) => record.toObject());
+                const record = await this.modelType.create(modelCreate);
+                await record.toObject();
                 const newestId = originalData._id;
                 const modelUpdate = new this.modelType({
                     ...originalData,
                     deletedAt: Date.now(),
                 });
-                console.log(modelUpdate);
                 return this.modelType.updateOne({ _id: newestId }, modelUpdate);
             }
         } catch (err) {

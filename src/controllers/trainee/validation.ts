@@ -1,16 +1,6 @@
 const validation = {
     create:
     {
-        // id:
-        // {
-        //     required: true,
-        //     custom: (value) => {
-        //         console.log('Value', value);
-        //         throw { error: 'Error Occured', message: 'Message' };
-        //     },
-        //     in: ['body'],
-        //     string: true,
-        // },
         email:
         {
             required: true,

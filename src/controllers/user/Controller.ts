@@ -17,7 +17,6 @@ class UserController {
                 return next('password does not match!!!!!');
             }
             const token = jwt.sign(userDetails, configuration.secretKey, { expiresIn: '15m' });
-            console.log('token is -----', token);
             res.send({
                 status: 200,
                 message: 'login successful',
