@@ -11,6 +11,9 @@ export default class UserRepository extends VersionableRepository<IUserModel, mo
     public get(query) {
         return super.find(query);
     }
+    public getAll(query, options) {
+        return super.findAll(query, options);
+    }
     public update(query, dataToUpdate) {
         return super.update(query, dataToUpdate);
     }

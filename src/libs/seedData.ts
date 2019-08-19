@@ -20,17 +20,18 @@ export default () => {
         userId: 'Vishal Nirwan',
     };
 
-    userModel.countDocuments({}, (err, count) => {
+    userModel.countDocuments({}, async (err, count) => {
         console.log('count is -----', count);
-        if (count === 0) {
-            userRepository.create(user)
-                .then((res) => {
-                    console.log('user created --', res);
+        try {
+            if (count === 0) {
+                const seedUser = await userRepository.create(user);
+                if (seedUser) {
+                    console.log('user created --', seedUser);
 
-                })
-                .catch((err) => {
-                    console.log('error issss createee', err);
-                });
+                }
+            }
+        } catch (err) {
+            console.log('error issss createee', err);
         }
     });
 };

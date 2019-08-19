@@ -1,48 +1,103 @@
+import * as bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
-// import { validationHandler } from '../../libs';
-class TraineeController {
-    public get(req: Request, res: Response) {
-        console.log('inside get trainee');
-        res.send([
-            {
-                name: 'fake response',
-            },
-        ]);
-    }
-    public create(req: Request, res: Response) {
-        console.log('inside create trainee');
-        res.send({
-            data: {
-                id: req.body.id,
-                name: req.body.name,
-            },
-            message: 'trainee create successful',
-            status: 'ok',
-        });
-    }
-    public update(req: Request, res: Response) {
-        console.log('inside update trainee');
-        res.send({
-            data: {
-                id: req.body.id,
-                name: req.body.dataToUpdate.name,
-            },
-            message: 'trainee update successful',
-            status: 'ok',
-        });
-    }
-    public delete(req: Request, res: Response) {
-        console.log('inside delete trainee');
-        res.send({
-            data: {
-                id: req.params.id,
-                name: req.params.name,
-            },
-            message: 'trainee delete successful',
-            status: 'ok',
-        });
-    }
+import UserRepository from '../../repositories/user/UserRepository';
+const userRepository = new UserRepository();
 
+class TraineeController {
+    public async get(req: Request, res: Response) {
+        try {
+            const query = { role: 'trainee', deletedAt: { $exists: false }};
+            const traineeList = await userRepository.getAll(query, req.query);
+            const count: number = traineeList.length;
+            console.log('inside get trainee');
+
+            res.send([
+                {
+                    count,
+                    status: 200,
+                    message: 'all trainees fetched',
+                    data: traineeList,
+                },
+            ]);
+        } catch (err) {
+            res.send({
+                message: err,
+                status: 400,
+            });
+        }
+    }
+    public async create(req: Request, res: Response) {
+        try {
+            console.log('inside create trainee');
+            const saltRounds = 10;
+            const salt = bcrypt.genSaltSync(saltRounds);
+            const hash = bcrypt.hashSync(req.body.password, salt);
+            req.body.password = hash;
+            const createTrainee = await userRepository.create(req.body);
+            res.send({
+                data: {
+                    name: createTrainee,
+                },
+                message: 'trainee create successful',
+                status: 'ok',
+            });
+        } catch (err) {
+            res.send({
+                message: err,
+                status: 400,
+            });
+        }
+    }
+    public async update(req: Request, res: Response) {
+        try {
+            console.log('inside update trainee');
+            const updateTrainee = await userRepository.update(req.body.id, req.body.dataToUpdate);
+            if (updateTrainee === 'user not found for update') {
+                res.send({
+                    message: updateTrainee,
+                    status: '404',
+                });
+            } else {
+                res.send({
+                    data: req.body,
+                    message: 'trainee update successful',
+                    status: 'ok',
+                });
+            }
+        } catch (err) {
+            res.send({
+                message: err,
+                status: 400,
+            });
+        }
+    }
+    public async delete(req: Request, res: Response) {
+        try {
+            console.log('inside delete trainee');
+            const userDelete = await userRepository.delete({ _id: req.params.id });
+            if (userDelete === 'user not found in delete') {
+                res.send({
+                    message: userDelete,
+                    status: '404',
+                });
+            } else {
+                res.send({
+                    data: {
+                        id: req.params.id,
+                        name: req.params.name,
+                    },
+                    message: 'trainee delete successful',
+                    status: 'ok',
+                });
+            }
+        } catch (err) {
+            res.send({
+                message: err,
+                status: 400,
+            });
+        }
+    }
 }
+
 const traineeController = new TraineeController();
 export default traineeController;

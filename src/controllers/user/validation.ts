@@ -13,14 +13,6 @@ const validation = {
             required: true,
             errorMessage: 'password is required',
             in: ['body'],
-            // regex: '^[a-zA-Z_]+$',
-        },
-        name:
-        {
-            required: true,
-            errorMessage: 'Name is required',
-            in: ['body'],
-            regex: '^[a-zA-Z].*[\s\.]*$',
         },
     },
     delete:
