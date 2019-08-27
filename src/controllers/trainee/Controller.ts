@@ -51,7 +51,14 @@ class TraineeController {
     public async update(req: Request, res: Response) {
         try {
             console.log('inside update trainee');
-            const updateTrainee = await userRepository.update(req.body.id, req.body.dataToUpdate);
+            const { id, dataToUpdate } = req.body;
+            if (dataToUpdate.password !== ' ') {
+                const saltRounds = 10;
+                const salt = bcrypt.genSaltSync(saltRounds);
+                const hash = bcrypt.hashSync(dataToUpdate.password, salt);
+                dataToUpdate.password = hash;
+            }
+            const updateTrainee = await userRepository.update(id, dataToUpdate);
             if (updateTrainee === 'user not found for update') {
                 res.send({
                     message: updateTrainee,

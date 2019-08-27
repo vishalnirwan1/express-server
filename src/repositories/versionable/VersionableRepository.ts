@@ -69,7 +69,7 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         }
     }
     public async find(query) {
-        return this.modelType.findOne(query).populate('password').lean();
+        return this.modelType.findOne(query).lean();
     }
     public async findAll(query, options) {
         return this.modelType.find(query, undefined, options).populate('password').lean();
