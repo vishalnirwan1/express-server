@@ -6,7 +6,7 @@ const userRepository = new UserRepository();
 class TraineeController {
     public async get(req: Request, res: Response) {
         try {
-            const query = { role: 'trainee', deletedAt: { $exists: false }};
+            const query = { role: 'trainee', deletedAt: { $exists: false } };
             const traineeList = await userRepository.getAll(query, req.query);
             const count: number = traineeList.length;
             console.log('inside get trainee');
@@ -39,7 +39,7 @@ class TraineeController {
                     name: createTrainee,
                 },
                 message: 'trainee create successful',
-                status: 'ok',
+                status: 200,
             });
         } catch (err) {
             res.send({
@@ -51,7 +51,14 @@ class TraineeController {
     public async update(req: Request, res: Response) {
         try {
             console.log('inside update trainee');
-            const updateTrainee = await userRepository.update(req.body.id, req.body.dataToUpdate);
+            const { id, dataToUpdate } = req.body;
+            if (dataToUpdate.password !== ' ') {
+                const saltRounds = 10;
+                const salt = bcrypt.genSaltSync(saltRounds);
+                const hash = bcrypt.hashSync(dataToUpdate.password, salt);
+                dataToUpdate.password = hash;
+            }
+            const updateTrainee = await userRepository.update(id, dataToUpdate);
             if (updateTrainee === 'user not found for update') {
                 res.send({
                     message: updateTrainee,
@@ -61,7 +68,7 @@ class TraineeController {
                 res.send({
                     data: req.body,
                     message: 'trainee update successful',
-                    status: 'ok',
+                    status: 200,
                 });
             }
         } catch (err) {
@@ -87,7 +94,7 @@ class TraineeController {
                         name: req.params.name,
                     },
                     message: 'trainee delete successful',
-                    status: 'ok',
+                    status: 200,
                 });
             }
         } catch (err) {
