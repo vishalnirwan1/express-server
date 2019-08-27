@@ -6,7 +6,7 @@ const userRepository = new UserRepository();
 class TraineeController {
     public async get(req: Request, res: Response) {
         try {
-            const query = { role: 'trainee', deletedAt: { $exists: false }};
+            const query = { role: 'trainee', deletedAt: { $exists: false } };
             const traineeList = await userRepository.getAll(query, req.query);
             const count: number = traineeList.length;
             console.log('inside get trainee');
@@ -39,7 +39,7 @@ class TraineeController {
                     name: createTrainee,
                 },
                 message: 'trainee create successful',
-                status: 'ok',
+                status: 200,
             });
         } catch (err) {
             res.send({
@@ -61,7 +61,7 @@ class TraineeController {
                 res.send({
                     data: req.body,
                     message: 'trainee update successful',
-                    status: 'ok',
+                    status: 200,
                 });
             }
         } catch (err) {
@@ -87,7 +87,7 @@ class TraineeController {
                         name: req.params.name,
                     },
                     message: 'trainee delete successful',
-                    status: 'ok',
+                    status: 200,
                 });
             }
         } catch (err) {
