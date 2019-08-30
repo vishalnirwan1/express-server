@@ -12,7 +12,7 @@ const validationHandler = (config) => (req, res, next) => {
                     }
                     if ((!(configKey in req[inn]) || (value === '')) || (config[configKey].required === 'true')) {
                         next({
-                            error: configKey + ' is required',
+                            message: configKey + ' is required',
                             status: 400,
                         });
                     }
@@ -20,7 +20,7 @@ const validationHandler = (config) => (req, res, next) => {
                 case 'string':
                     if (!(typeof (value) === 'string') || !(value !== '')) {
                         next({
-                            error: configKey + ' is required or must be string',
+                            message: configKey + ' is required or must be string',
                             status: 400,
                         });
                     }
@@ -29,7 +29,7 @@ const validationHandler = (config) => (req, res, next) => {
                     const regexx = new RegExp(config[configKey].regex);
                     if (!regexx.test(value)) {
                         next({
-                            error: config[configKey].errorMessage,
+                            message: config[configKey].errorMessage,
                             status: 400,
                         });
                     }
@@ -40,7 +40,7 @@ const validationHandler = (config) => (req, res, next) => {
                     }
                     if (isNaN(value)) {
                         next({
-                            error: config[configKey].errorMessage,
+                            message: config[configKey].errorMessage,
                             status: 400,
                         });
                     }
@@ -48,7 +48,7 @@ const validationHandler = (config) => (req, res, next) => {
                 case 'isObject':
                     if (!(typeof (value) === 'object')) {
                         next({
-                            error: 'data should be in object',
+                            message: 'data should be in object',
                             status: 400,
                         });
                     }

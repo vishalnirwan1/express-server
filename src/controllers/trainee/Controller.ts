@@ -80,8 +80,8 @@ class TraineeController {
             }
         } catch (err) {
             res.send({
-                message: err,
-                status: 404,
+                message: err.message,
+                status: 401,
             });
         }
     }
@@ -101,7 +101,7 @@ class TraineeController {
             }
         } catch (err) {
             res.send({
-                message: err,
+                message: err.message,
                 status: 404,
             });
         }

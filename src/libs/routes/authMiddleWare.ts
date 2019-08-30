@@ -19,7 +19,7 @@ export default (moduleName, permissionType) => async (req, res, next) => {
 
         } else {
             next({
-                error: 'Access forbidden',
+                message: 'Access forbidden',
                 status: 403,
             });
         }
@@ -27,7 +27,7 @@ export default (moduleName, permissionType) => async (req, res, next) => {
     catch (err) {
         console.log('error is --', err);
         next({
-            error: 'Unauthorised Access',
+            message: 'Unauthorised Access',
             status: 401,
         });
     }
