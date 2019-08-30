@@ -18,6 +18,7 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
             createdBy: options.userId,
             originalId: id,
             updatedBy: options.userId,
+            role: 'trainee',
 
         };
         const record = await this.modelType.create(model);
@@ -28,7 +29,7 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         try {
             const findUpdate = await this.modelType.findOne({ originalId: id, deletedAt: { $exists: false } }).lean();
             if (!findUpdate) {
-                return 'user not found for update';
+                throw new Error('user not foundddd for update');
             } else {
                 originalData = findUpdate;
                 const newId = VersionableRepository.generateObjectId();
@@ -47,25 +48,29 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
                 return this.modelType.updateOne({ _id: newestId }, modelUpdate);
             }
         } catch (err) {
-            return err;
+            throw err;
         }
 
     }
     public async delete(id) {
-        let originalData;
-        const findDelete = await this.modelType.findOne({ originalId: id, deletedAt: { $exists: false } }).lean();
-        if (!findDelete) {
-            return 'user not found in delete';
-        }
-        else {
-            originalData = findDelete;
-            const newId = originalData._id;
-            const modelDelete = new this.modelType({
-                ...originalData,
-                deletedAt: Date.now(),
-            });
+        try {
+            let originalData;
+            const findDelete = await this.modelType.findOne({ originalId: id, deletedAt: { $exists: false } }).lean();
+            if (findDelete) {
+                originalData = findDelete;
+                const newId = originalData._id;
+                const modelDelete = new this.modelType({
+                    ...originalData,
+                    deletedAt: Date.now(),
+                });
 
-            return this.modelType.updateOne({ _id: newId }, modelDelete);
+                return this.modelType.updateOne({ _id: newId }, modelDelete);
+            } else {
+                throw new Error('user not found in delete');
+            }
+        }
+        catch (err) {
+            throw err;
         }
     }
     public async find(query) {

@@ -19,16 +19,16 @@ export default (moduleName, permissionType) => async (req, res, next) => {
 
         } else {
             next({
-                error: 'Unauthorised Access',
-                status: 401,
+                error: 'Access forbidden',
+                status: 403,
             });
         }
     }
     catch (err) {
         console.log('error is --', err);
         next({
-            error: 'Access forbidden',
-            status: 403,
+            error: 'Unauthorised Access',
+            status: 401,
         });
     }
 };

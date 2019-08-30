@@ -9,8 +9,11 @@ class UserController {
             const { email, password } = req.body;
             const userDetails = await userRepository.get({ email, deletedAt: { $exists: false } });
             if (!userDetails) {
-                return next('user not founddd ');
-            }
+                return next({
+                    error: 'user not founddd',
+                    status: 404,
+            });
+        }
             const { password: hashPassword } = userDetails;
 
             if (!(bcrypt.compareSync(password, hashPassword))) {

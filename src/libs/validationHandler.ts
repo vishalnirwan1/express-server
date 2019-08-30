@@ -1,23 +1,19 @@
 const validationHandler = (config) => (req, res, next) => {
     Object.keys(config).map((configKey) => {
         const { in: inn } = config[configKey];
-        let returnIt = false;
 
         Object.keys(config[configKey]).forEach((keyProperty) => {
             const value = req[inn][configKey];
-            if (returnIt) {
-                return;
-            }
             switch (keyProperty) {
                 case 'required':
                     if (!config[configKey].required && !value) {
-                        returnIt = true;
+                        req[inn][configKey] = config[configKey].default;
                         break;
                     }
                     if ((!(configKey in req[inn]) || (value === '')) || (config[configKey].required === 'true')) {
                         next({
                             error: configKey + ' is required',
-                            status: 404,
+                            status: 400,
                         });
                     }
                     break;
@@ -25,7 +21,7 @@ const validationHandler = (config) => (req, res, next) => {
                     if (!(typeof (value) === 'string') || !(value !== '')) {
                         next({
                             error: configKey + ' is required or must be string',
-                            status: 404,
+                            status: 400,
                         });
                     }
                     break;
@@ -57,6 +53,9 @@ const validationHandler = (config) => (req, res, next) => {
                         });
                     }
                     break;
+                    case 'custom':
+                        config[configKey].custom(value);
+                        break;
             }
         });
     });

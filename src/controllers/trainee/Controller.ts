@@ -1,6 +1,8 @@
 import * as bcrypt from 'bcrypt';
 import { Request, Response } from 'express';
+import { userModel } from '../../repositories/user/UserModel';
 import UserRepository from '../../repositories/user/UserRepository';
+
 const userRepository = new UserRepository();
 
 class TraineeController {
@@ -29,17 +31,27 @@ class TraineeController {
     public async create(req: Request, res: Response) {
         try {
             console.log('inside create trainee');
-            const saltRounds = 10;
-            const salt = bcrypt.genSaltSync(saltRounds);
-            const hash = bcrypt.hashSync(req.body.password, salt);
-            req.body.password = hash;
-            const createTrainee = await userRepository.create(req.body);
-            res.send({
-                data: {
-                    name: createTrainee,
-                },
-                message: 'trainee create successful',
-                status: 200,
+            userModel.countDocuments({ email: req.body.email }, async (err, count) => {
+                if (count === 0) {
+                    const saltRounds = 10;
+                    const salt = bcrypt.genSaltSync(saltRounds);
+                    const hash = bcrypt.hashSync(req.body.password, salt);
+                    req.body.password = hash;
+                    const createTrainee = await userRepository.create(req.body);
+                    res.send({
+                        data: {
+                            details: createTrainee,
+                        },
+                        message: 'trainee create successful',
+                        status: 200,
+                    });
+                }
+                else {
+                    res.send({
+                        message: 'user already exists',
+                        status: 400,
+                    });
+                }
             });
         } catch (err) {
             res.send({
@@ -52,19 +64,14 @@ class TraineeController {
         try {
             console.log('inside update trainee');
             const { id, dataToUpdate } = req.body;
-            if (dataToUpdate.password !== ' ') {
+            if (dataToUpdate.password !== undefined) {
                 const saltRounds = 10;
                 const salt = bcrypt.genSaltSync(saltRounds);
                 const hash = bcrypt.hashSync(dataToUpdate.password, salt);
                 dataToUpdate.password = hash;
             }
             const updateTrainee = await userRepository.update(id, dataToUpdate);
-            if (updateTrainee === 'user not found for update') {
-                res.send({
-                    message: updateTrainee,
-                    status: '404',
-                });
-            } else {
+            if (updateTrainee) {
                 res.send({
                     data: req.body,
                     message: 'trainee update successful',
@@ -74,7 +81,7 @@ class TraineeController {
         } catch (err) {
             res.send({
                 message: err,
-                status: 400,
+                status: 404,
             });
         }
     }
@@ -82,12 +89,7 @@ class TraineeController {
         try {
             console.log('inside delete trainee');
             const userDelete = await userRepository.delete({ _id: req.params.id });
-            if (userDelete === 'user not found in delete') {
-                res.send({
-                    message: userDelete,
-                    status: '404',
-                });
-            } else {
+            if (userDelete) {
                 res.send({
                     data: {
                         id: req.params.id,
@@ -100,7 +102,7 @@ class TraineeController {
         } catch (err) {
             res.send({
                 message: err,
-                status: 400,
+                status: 404,
             });
         }
     }

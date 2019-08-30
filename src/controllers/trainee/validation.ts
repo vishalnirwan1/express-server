@@ -56,8 +56,18 @@ const validation = {
         {
             required: true,
             custom: (dataToUpdate) => {
-                console.log('Value', dataToUpdate);
-                throw { error: 'Error Occured', message: 'Message' };
+                const { name, email, password } = dataToUpdate;
+                const nameRegex = new RegExp('^[a-zA-Z].*[\s\.]*$');
+
+                if (name === '' || !(nameRegex.test(name)) ) {
+                    throw { error: 'Error Occured', message: 'name is required' };
+                }
+                if (email === '') {
+                    throw { error: 'Error Occured', message: 'email is requireddd' };
+                }
+                if (password === '') {
+                    throw { error: 'Error Occured', message: 'password is required' };
+                }
             },
             in: ['body'],
             isObject: true,
