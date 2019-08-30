@@ -9,12 +9,18 @@ class UserController {
             const { email, password } = req.body;
             const userDetails = await userRepository.get({ email, deletedAt: { $exists: false } });
             if (!userDetails) {
-                return next('user not founddd ');
+                return next({
+                    message: 'user not founddd',
+                    status: 404,
+                });
             }
             const { password: hashPassword } = userDetails;
 
             if (!(bcrypt.compareSync(password, hashPassword))) {
-                return next('password does not match!!!!!');
+                return next({
+                    message: 'password does not match!!!!!',
+                    status: 400,
+                });
             }
             const token = jwt.sign(userDetails, configuration.secretKey, { expiresIn: '15m' });
             res.send({

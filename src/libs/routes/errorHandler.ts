@@ -1,6 +1,6 @@
 export const middle2 = (err, req, res, next) => {
     res.send({
-        message: err,
+        error: err,
         timestamp: new Date(),
     });
 };
