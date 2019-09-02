@@ -6,10 +6,10 @@ const userRepository = new UserRepository();
 
 export default (moduleName, permissionType) => async (req, res, next) => {
     try {
-        const token = req.headers.authorization;
+        const { authorization: token } = req.headers;
         const userInfo = jwt.verify(token, configuration.secretKey);
-        const role = userInfo.role;
-        const user = await userRepository.get({ originalId: userInfo.originalId, deletedAt: { $exists: false } });
+        const { role, originalId } = userInfo;
+        const user = await userRepository.get({ originalId, deletedAt: { $exists: false } });
         if (!user) {
             next(' User does not exist');
         }

@@ -1,3 +1,3 @@
-export const middle1 = (req, res, next) => {
+export const notFoundRoutes = (req, res, next) => {
         next('Not Found');
 };
