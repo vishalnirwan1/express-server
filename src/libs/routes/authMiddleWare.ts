@@ -15,6 +15,7 @@ export default (moduleName, permissionType) => async (req, res, next) => {
         }
         req.user = user;
         if (hasPermission(moduleName, role, permissionType)) {
+            req.body.userId = userInfo.originalId;
             next();
 
         } else {

@@ -32,9 +32,9 @@ class TraineeController {
     }
     public async create(req: Request, res: Response, next) {
         try {
-            const { email, password, name } = req.body;
+            const { email, password } = req.body;
             console.log('inside create trainee');
-            userModel.countDocuments({ email }, async (err, count) => {
+            userModel.countDocuments({ email, deletedAt: { $exists: false } }, async (err, count) => {
                 if (count === 0) {
                     const saltRounds = 10;
                     const salt = bcrypt.genSaltSync(saltRounds);
@@ -45,13 +45,13 @@ class TraineeController {
                         data: {
                             details: createTrainee,
                         },
-                        message: 'trainee create successful',
+                        message: 'trainee created successful',
                         status: 200,
                     });
                 }
                 else {
                     next({
-                        message: 'user already exists',
+                        message: 'trainee already exists',
                         status: 400,
                     });
                 }
@@ -66,20 +66,29 @@ class TraineeController {
     public async update(req: Request, res: Response, next) {
         try {
             console.log('inside update trainee');
-            const { id, dataToUpdate } = req.body;
+            const { id, dataToUpdate, userId } = req.body;
+            const { name, email, password } = dataToUpdate;
             if (dataToUpdate.password !== undefined) {
                 const saltRounds = 10;
                 const salt = bcrypt.genSaltSync(saltRounds);
                 const hash = bcrypt.hashSync(dataToUpdate.password, salt);
                 dataToUpdate.password = hash;
             }
-            const updateTrainee = await userRepository.update(id, dataToUpdate);
+            const updateTrainee = await userRepository.update(id, { dataToUpdate, userId });
             if (updateTrainee) {
+                if (password === undefined || email !== undefined || name !== undefined) {
                 res.send({
-                    data: req.body,
-                    message: 'trainee update successful',
+                    data: { id, name, email },
+                    message: 'trainee updated successful',
                     status: 200,
                 });
+            } else {
+                res.send({
+                    data: {id},
+                    message: 'password updated successful',
+                    status: 200,
+                });
+            }
             }
         } catch (err) {
             next({
@@ -90,14 +99,16 @@ class TraineeController {
     }
     public async delete(req: Request, res: Response, next) {
         try {
+            const { id } = req.params;
+            const { userId } = req.body;
             console.log('inside delete trainee');
-            const userDelete = await userRepository.delete({ _id: req.params.id });
+            const userDelete = await userRepository.delete({ _id: id }, userId );
             if (userDelete) {
                 res.send({
                     data: {
-                        id: req.params.id,
+                        id,
                     },
-                    message: 'trainee delete successful',
+                    message: 'trainee deleted successful',
                     status: 200,
                 });
             }

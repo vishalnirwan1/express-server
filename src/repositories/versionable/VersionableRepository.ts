@@ -10,6 +10,18 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         this.modelType = modelType;
     }
 
+    public async createUser(options): Promise<D> {
+        const id = VersionableRepository.generateObjectId();
+        const model = {
+            ...options,
+            _id: id,
+            createdBy: options.name,
+            originalId: id,
+
+        };
+        const record = await this.modelType.create(model);
+        return record.toObject();
+    }
     public async create(options): Promise<D> {
         const id = VersionableRepository.generateObjectId();
         const model = {
@@ -17,12 +29,13 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
             _id: id,
             createdBy: options.userId,
             originalId: id,
-            updatedBy: options.userId,
             role: 'trainee',
 
         };
         const record = await this.modelType.create(model);
-        return record.toObject();
+        const newRecord = record.toObject();
+        delete newRecord.password;
+        return newRecord;
     }
 
     public async update(id, options) {
@@ -35,7 +48,7 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
             const newId = VersionableRepository.generateObjectId();
             const modelCreate = new this.modelType({
                 ...originalData,
-                ...options,
+                ...options.dataToUpdate,
                 _id: newId,
             });
             const record = await this.modelType.create(modelCreate);
@@ -43,6 +56,8 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
             const newestId = originalData._id;
             const modelUpdate = new this.modelType({
                 ...originalData,
+                updatedBy: options.userId,
+                updatedAt: Date.now(),
                 deletedAt: Date.now(),
             });
             return this.modelType.updateOne({ _id: newestId }, modelUpdate);
@@ -50,7 +65,7 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
 
     }
 
-    public async delete(id) {
+    public async delete(id, userId) {
         let originalData;
         const findDelete = await this.modelType.findOne({ originalId: id, deletedAt: { $exists: false } }).lean();
         if (findDelete) {
@@ -58,19 +73,20 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
             const newId = originalData._id;
             const modelDelete = new this.modelType({
                 ...originalData,
+                deletedBy: userId,
                 deletedAt: Date.now(),
             });
 
             return this.modelType.updateOne({ _id: newId }, modelDelete);
         } else {
-            throw new Error('user not found in delete');
+            throw new Error('user not found for delete');
         }
     }
 
     public async find(query) {
-        return this.modelType.findOne(query).lean();
+        return this.modelType.findOne(query, '-password, -createdBy, -__v').lean();
     }
     public async findAll(query, options) {
-        return this.modelType.find(query, undefined, options).populate('password').lean();
+        return this.modelType.find(query, '-password, -__v', options).sort({ name : 1 }).lean();
     }
 }
