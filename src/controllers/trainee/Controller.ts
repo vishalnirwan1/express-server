@@ -6,11 +6,13 @@ import UserRepository from '../../repositories/user/UserRepository';
 const userRepository = new UserRepository();
 
 class TraineeController {
-    public async get(req: Request, res: Response) {
+    public async get(req: Request, res: Response, next) {
         try {
+            const countQuery = { role: 'trainee', deletedAt: { $exists: false } };
+            const allTrainees = await userRepository.getAll(countQuery, undefined);
+            const count: number = allTrainees.length;
             const query = { role: 'trainee', deletedAt: { $exists: false } };
             const traineeList = await userRepository.getAll(query, req.query);
-            const count: number = traineeList.length;
             console.log('inside get trainee');
 
             res.send([
@@ -22,20 +24,21 @@ class TraineeController {
                 },
             ]);
         } catch (err) {
-            res.send({
+            next({
                 message: err,
                 status: 400,
             });
         }
     }
-    public async create(req: Request, res: Response) {
+    public async create(req: Request, res: Response, next) {
         try {
+            const { email, password, name } = req.body;
             console.log('inside create trainee');
-            userModel.countDocuments({ email: req.body.email }, async (err, count) => {
+            userModel.countDocuments({ email }, async (err, count) => {
                 if (count === 0) {
                     const saltRounds = 10;
                     const salt = bcrypt.genSaltSync(saltRounds);
-                    const hash = bcrypt.hashSync(req.body.password, salt);
+                    const hash = bcrypt.hashSync(password, salt);
                     req.body.password = hash;
                     const createTrainee = await userRepository.create(req.body);
                     res.send({
@@ -47,20 +50,20 @@ class TraineeController {
                     });
                 }
                 else {
-                    res.send({
+                    next({
                         message: 'user already exists',
                         status: 400,
                     });
                 }
             });
         } catch (err) {
-            res.send({
+            next({
                 message: err,
                 status: 400,
             });
         }
     }
-    public async update(req: Request, res: Response) {
+    public async update(req: Request, res: Response, next) {
         try {
             console.log('inside update trainee');
             const { id, dataToUpdate } = req.body;
@@ -79,13 +82,13 @@ class TraineeController {
                 });
             }
         } catch (err) {
-            res.send({
+            next({
                 message: err.message,
                 status: 401,
             });
         }
     }
-    public async delete(req: Request, res: Response) {
+    public async delete(req: Request, res: Response, next) {
         try {
             console.log('inside delete trainee');
             const userDelete = await userRepository.delete({ _id: req.params.id });
@@ -93,14 +96,13 @@ class TraineeController {
                 res.send({
                     data: {
                         id: req.params.id,
-                        name: req.params.name,
                     },
                     message: 'trainee delete successful',
                     status: 200,
                 });
             }
         } catch (err) {
-            res.send({
+            next({
                 message: err.message,
                 status: 404,
             });

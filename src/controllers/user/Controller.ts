@@ -22,7 +22,7 @@ class UserController {
                     status: 400,
                 });
             }
-            const token = jwt.sign(userDetails, configuration.secretKey, { expiresIn: '15m' });
+            const token = jwt.sign(userDetails, configuration.secretKey, { expiresIn: '30m' });
             res.send({
                 status: 200,
                 message: 'login successful',
@@ -31,7 +31,7 @@ class UserController {
                 },
             });
         } catch (err) {
-            res.send({
+            next({
                 message: err,
                 status: 400,
             });
@@ -47,7 +47,8 @@ class UserController {
     }
     public async updateUser(req, res, next) {
         try {
-            const userUpdate = await userRepository.update({ _id: req.body.id }, req.body.dataToUpdate);
+            const { id, dataToUpdate } = req.body;
+            const userUpdate = await userRepository.update({ _id: id }, dataToUpdate);
             if (userUpdate === 'user not found for update') {
                 next({
                     message: userUpdate,
@@ -55,13 +56,13 @@ class UserController {
                 });
             } else {
                 res.send({
-                    data: req.body.dataToUpdate,
+                    data: dataToUpdate,
                     message: 'user updated succesfully',
                     status: 200,
                 });
             }
         } catch (err) {
-            res.send({
+            next({
                 message: err,
                 status: 400,
             });
@@ -84,7 +85,7 @@ class UserController {
             }
         }
         catch (err) {
-            res.send({
+            next({
                 message: err,
                 status: 400,
             });
