@@ -70,7 +70,8 @@ class UserController {
     }
     public async deleteUser(req, res, next) {
         try {
-            const userDelete = await userRepository.delete({ _id: req.params.id });
+            const { userId } = req.body;
+            const userDelete = await userRepository.delete({ _id: req.params.id }, userId );
             if (userDelete === 'user not found in delete') {
                 next({
                     message: userDelete,

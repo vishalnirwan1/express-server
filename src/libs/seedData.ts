@@ -17,14 +17,13 @@ export default () => {
         email: 'vishal@gmail.com',
         password: hash,
         role: 'head-trainer',
-        userId: 'Vishal Nirwan',
     };
 
     userModel.countDocuments({}, async (err, count) => {
         console.log('count is -----', count);
         try {
             if (count === 0) {
-                const seedUser = await userRepository.create(user);
+                const seedUser = await userRepository.createUser(user);
                 if (seedUser) {
                     console.log('user created --', seedUser);
 
