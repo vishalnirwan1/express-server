@@ -19,7 +19,7 @@ class TraineeController {
                 {
                     count,
                     status: 200,
-                    message: 'all trainees fetched',
+                    message: 'All trainees fetched successfully',
                     data: traineeList,
                 },
             ]);
@@ -45,13 +45,13 @@ class TraineeController {
                         data: {
                             details: createTrainee,
                         },
-                        message: 'trainee created successful',
+                        message: 'Trainee created successfully',
                         status: 200,
                     });
                 }
                 else {
                     next({
-                        message: 'trainee already exists',
+                        message: 'Trainee already exists with this email id',
                         status: 400,
                     });
                 }
@@ -68,6 +68,17 @@ class TraineeController {
             console.log('inside update trainee');
             const { id, dataToUpdate, userId } = req.body;
             const { name, email, password } = dataToUpdate;
+            const updateQuery = { email, deletedAt: { $exists: false }, originalId: { $ne: id } };
+            if (email) {
+                userModel.countDocuments(updateQuery, async (err, count) => {
+                    if (count !== 0) {
+                        next({
+                            message: 'Trainee already exists with this email id',
+                            status: 400,
+                        });
+                    }
+                });
+            }
             if (dataToUpdate.password !== undefined) {
                 const saltRounds = 10;
                 const salt = bcrypt.genSaltSync(saltRounds);
@@ -77,23 +88,24 @@ class TraineeController {
             const updateTrainee = await userRepository.update(id, { dataToUpdate, userId });
             if (updateTrainee) {
                 if (password === undefined || email !== undefined || name !== undefined) {
-                res.send({
-                    data: { id, name, email },
-                    message: 'trainee updated successful',
-                    status: 200,
-                });
-            } else {
-                res.send({
-                    data: {id},
-                    message: 'password updated successful',
-                    status: 200,
-                });
+                    res.send({
+                        data: { id, name, email },
+                        message: 'Trainee updated successfully',
+                        status: 200,
+                    });
+                } else {
+                    res.send({
+                        data: { id },
+                        message: 'Password updated successfully',
+                        status: 200,
+                    });
+                }
             }
-            }
-        } catch (err) {
+        }
+        catch (err) {
             next({
                 message: err.message,
-                status: 401,
+                status: 404,
             });
         }
     }
@@ -102,13 +114,13 @@ class TraineeController {
             const { id } = req.params;
             const { userId } = req.body;
             console.log('inside delete trainee');
-            const userDelete = await userRepository.delete({ _id: id }, userId );
+            const userDelete = await userRepository.delete({ _id: id }, userId);
             if (userDelete) {
                 res.send({
                     data: {
                         id,
                     },
-                    message: 'trainee deleted successful',
+                    message: 'Trainee deleted successfully',
                     status: 200,
                 });
             }

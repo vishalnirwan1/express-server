@@ -52,12 +52,14 @@ const validation = {
                 console.log('Value', dataToUpdate);
                 throw { error: 'Error Occured', message: 'Message' };
             },
+            errorMessage: 'dataToUpdate is required',
             in: ['body'],
             isObject: true,
         },
         id:
         {
             required: true,
+            errorMessage: 'id is required',
             in: ['body'],
             string: true,
         },

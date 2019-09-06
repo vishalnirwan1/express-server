@@ -10,7 +10,7 @@ class UserController {
             const userDetails = await userRepository.get({ email, deletedAt: { $exists: false } });
             if (!userDetails) {
                 return next({
-                    message: 'user not founddd',
+                    message: 'User not found',
                     status: 404,
                 });
             }
@@ -18,14 +18,14 @@ class UserController {
 
             if (!(bcrypt.compareSync(password, hashPassword))) {
                 return next({
-                    message: 'password does not match!!!!!',
+                    message: 'Password does not match!!!!!',
                     status: 400,
                 });
             }
             const token = jwt.sign(userDetails, configuration.secretKey, { expiresIn: '30m' });
             res.send({
                 status: 200,
-                message: 'login successful',
+                message: 'Login successful',
                 data: {
                     token,
                 },
@@ -41,7 +41,7 @@ class UserController {
     public fetchUser(req, res) {
         res.send({
             status: 200,
-            message: 'user fetched successfully',
+            message: 'User fetched successfully',
             data: req.user,
         });
     }
