@@ -1,64 +1,93 @@
 const validationHandler = (config) => (req, res, next) => {
-    Object.keys(config).map((configKey) => {
-        const { in: inn } = config[configKey];
+  const errorCount = {};
+  const message = 'message';
+  const status = 'status';
+  Object.keys(config).map((configKey) => {
 
-        Object.keys(config[configKey]).forEach((keyProperty) => {
-            const value = req[inn][configKey];
-            switch (keyProperty) {
-                case 'required':
-                    if (!config[configKey].required && !value) {
-                        req[inn][configKey] = config[configKey].default;
-                        break;
-                    }
-                    if ((!(configKey in req[inn]) || (value === '')) || (config[configKey].required === 'true')) {
-                        next({
-                            message: configKey + ' is required',
-                            status: 400,
-                        });
-                    }
-                    break;
-                case 'string':
-                    if (!(typeof (value) === 'string') || !(value !== '')) {
-                        next({
-                            message: configKey + ' is required or must be string',
-                            status: 400,
-                        });
-                    }
-                    break;
-                case 'regex':
-                    const regexx = new RegExp(config[configKey].regex);
-                    if (!regexx.test(value)) {
-                        next({
-                            message: config[configKey].errorMessage,
-                            status: 400,
-                        });
-                    }
-                    break;
-                case 'number':
-                    if (config[configKey].required === 'false') {
-                        next();
-                    }
-                    if (isNaN(value)) {
-                        next({
-                            message: config[configKey].errorMessage,
-                            status: 400,
-                        });
-                    }
-                    break;
-                case 'isObject':
-                    if (!(typeof (value) === 'object')) {
-                        next({
-                            message: 'data should be in object',
-                            status: 400,
-                        });
-                    }
-                    break;
-                    case 'custom':
-                        config[configKey].custom(value);
-                        break;
+    const key = config[configKey];
+    const { in: inn } = key;
+    Object.keys(key).forEach((keyProperty) => {
+      const value = req[inn][configKey];
+
+      switch (keyProperty) {
+
+        case 'required':
+          if (!key.required && !value) {
+            req[inn][configKey] = key.default;
+            break;
+          }
+          if ((!(configKey in req[inn]) || !value) || (key.required === 'true') || (Object.keys(value).length === 0)) {
+            if (!errorCount[message]) {
+              errorCount[message] = [];
             }
-        });
+            errorCount[message].push(key.errorMessage);
+            errorCount[status] = 400;
+          }
+          break;
+
+        case 'string':
+          if (!(typeof (value) === 'string') || !(value !== '')) {
+            if (!errorCount[message]) {
+              errorCount[message] = [];
+            }
+            if (value) {
+              errorCount[message].push(configKey + ' is required or must be string');
+              errorCount[status] = 400;
+            }
+          }
+          break;
+
+        case 'regex':
+          const regexx = new RegExp(key.regex);
+          if (!regexx.test(value)) {
+            if (!errorCount[message]) {
+              errorCount[message] = [];
+            }
+            if (value) {
+              errorCount[message].push('invalid ' + configKey);
+              errorCount[status] = 400;
+            }
+          }
+          break;
+
+        case 'number':
+          if (key.required === 'false') {
+            next();
+          }
+          if (isNaN(value)) {
+            if (!errorCount[message]) {
+              errorCount[message] = [];
+            }
+
+            errorCount[message].push(key.errorMessage);
+            errorCount[status] = 400;
+          }
+          break;
+
+        case 'isObject':
+          if (!(typeof (value) === 'object')) {
+            if (!errorCount[message]) {
+              errorCount[message] = [];
+            }
+
+            errorCount[message].push('update data must be in object type');
+            errorCount[status] = 400;
+          }
+          break;
+
+        case 'custom':
+          if (value) {
+            key.custom(value);
+          }
+          break;
+      }
     });
-    next();
+
+  });
+
+  if (Object.keys(errorCount).length === 0) {
+    return next();
+  }
+  next(errorCount);
 };
 export default validationHandler;

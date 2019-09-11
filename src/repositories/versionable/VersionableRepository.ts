@@ -15,7 +15,7 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         const model = {
             ...options,
             _id: id,
-            createdBy: options.name,
+            createdBy: id,
             originalId: id,
 
         };
@@ -35,14 +35,15 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         const record = await this.modelType.create(model);
         const newRecord = record.toObject();
         delete newRecord.password;
+        delete newRecord.__v;
         return newRecord;
     }
 
     public async update(id, options) {
         let originalData;
-        const findUpdate = await this.modelType.findOne({ originalId: id, deletedAt: { $exists: false } }).lean();
+        const findUpdate = await this.modelType.findOne({ originalId: id, deletedAt: { $exists: false }} ).lean();
         if (!findUpdate) {
-            throw new Error('user not foundddd for update');
+            throw new Error('trainee not found for update');
         } else {
             originalData = findUpdate;
             const newId = VersionableRepository.generateObjectId();
@@ -84,9 +85,9 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
     }
 
     public async find(query) {
-        return this.modelType.findOne(query, '-password, -createdBy, -__v').lean();
+        return this.modelType.findOne(query, '-__v').lean();
     }
     public async findAll(query, options) {
-        return this.modelType.find(query, '-password, -__v', options).sort({ name : 1 }).lean();
+        return this.modelType.find(query, '-__v -password ', options).sort({ name : 1 }).lean();
     }
 }
