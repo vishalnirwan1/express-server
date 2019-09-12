@@ -23,6 +23,7 @@ class UserController {
                 });
             }
             const token = jwt.sign(userDetails, configuration.secretKey, { expiresIn: '30m' });
+
             res.send({
                 status: 200,
                 message: 'Login successful',
@@ -37,6 +38,10 @@ class UserController {
             });
         }
     }
+
+    // public generateToken( userDetails, secretKey) {
+    //     return jwt.sign(userDetails, secretKey, {expiresIn: '30m'})
+    // }
 
     public fetchUser(req, res) {
         res.send({

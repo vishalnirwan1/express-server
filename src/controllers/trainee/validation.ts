@@ -60,15 +60,15 @@ const validation = {
                 const nameRegex = new RegExp('^[a-zA-Z].*[\s\.]*$');
                 const emailRegex = new RegExp('^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$');
                 if (name === '' || !(nameRegex.test(name)) ) {
-                    throw { error: 'Error Occured', message: 'name is required' };
+                    throw { error: 'Error Occured', message: 'name is required or must be string', status: 400 };
                 }
                 if (email) {
                 if (email === '' || !(emailRegex.test(email)) ) {
-                    throw { error: 'Error Occured', message: 'email is requireddd' };
+                    throw { error: 'Error Occured', message: 'email is required or invalid email', status: 400 };
                 }
             }
                 if (password === '') {
-                    throw { error: 'Error Occured', message: 'password is required' };
+                    throw { error: 'Error Occured', message: 'password is required', status: 400 };
                 }
             },
             errorMessage: 'dataToUpdate is required',

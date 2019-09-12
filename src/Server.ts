@@ -7,34 +7,41 @@ import { notFoundRoutes } from './libs/routes/notFoundRoute';
 import router from './router';
 import * as swaggerDoc from './swagger.json';
 
-const app = express();
+// export const app = express();
 
 export default class Server {
+    private app: express.Express;
     constructor(private config) {
-        this.run();
+        this.app = express();
     }
+
+    public application() {
+        return this.app;
+    }
+
     public bootstrap() {
         this.initBodyParser();
         this.setupRoutes();
         return this;
     }
+
     public setupRoutes() {
-        app.get('/health-check', (req, res) => {
+        this.app.get('/health-check', (req, res) => {
             res.send('I am Ok');
         });
-        app.use('/api', router);
-        app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
-        app.use(errorHandler);
-        app.use(notFoundRoutes);
+        this.app.use('/api', router);
+        this.app.use('/swagger', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+        this.app.use(errorHandler);
+        this.app.use(notFoundRoutes);
         return this;
     }
     public run() {
         const { config: { port, mongoUri } } = this;
         Database.open(mongoUri);
-        app.listen(port);
+        this.app.listen(port);
     }
     private initBodyParser() {
-        app.use(bodyParser.json());
-        app.use(bodyParser.urlencoded({ extended: true }));
+        this.app.use(bodyParser.json());
+        this.app.use(bodyParser.urlencoded({ extended: true }));
     }
 }

@@ -10,12 +10,13 @@ export default (moduleName, permissionType) => async (req, res, next) => {
         const userInfo = jwt.verify(token, configuration.secretKey);
         const { role, originalId } = userInfo;
         const user = await userRepository.get({ originalId, deletedAt: { $exists: false } });
+
         if (!user) {
             next(' User does not exist');
         }
         req.user = user;
         if (hasPermission(moduleName, role, permissionType)) {
-            req.body.userId = userInfo.originalId;
+            req.body.userId = userInfo.name;
             next();
 
         } else {
