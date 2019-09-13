@@ -27,4 +27,9 @@ export const loginData = {
         email: 'monty@gmail.com',
         password: 'Training@123',
     },
+
+    DifferentPassword: {
+        email: 'vishal@gmail.com',
+        password: 'Trainin',
+    },
 };

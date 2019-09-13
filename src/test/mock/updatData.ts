@@ -19,5 +19,7 @@ export const updateData = {
     EmptyEmail: {
         email: '',
     },
-
+    OnlyPassword: {
+        password: '1234',
+    },
 };

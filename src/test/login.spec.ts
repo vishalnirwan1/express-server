@@ -89,4 +89,17 @@ describe('Login EndPoint', () => {
         expect(message).toEqual('User not found');
         done();
     });
+
+    it('should not login successfully', async (done) => {
+
+        const res = await request(app1.app)
+            .post('/api/user/login')
+            .set('Accept', 'application/json')
+            .send(loginData.DifferentPassword);
+
+        const { error: { status, message } } = res.body;
+        expect(status).toEqual(400);
+        expect(message).toEqual('Password does not match!!!!!');
+        done();
+    });
 });

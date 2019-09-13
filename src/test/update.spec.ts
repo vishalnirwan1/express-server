@@ -54,6 +54,25 @@ describe('Update Trainee', () => {
         done();
     });
 
+    it('should update a trainee', async (done) => {
+        const dataToUpdate = updateData.OnlyPassword;
+
+        const res = await request(app1.app)
+            .put('/api/trainee')
+            .set('Authorization', token)
+            .set('Accept', 'application/json')
+            .send({
+                id: traineeId,
+                dataToUpdate,
+            });
+
+        const { body: { status, message } } = res;
+        expect(status).toEqual(200);
+        expect(res.body).toHaveProperty('data');
+        expect(message).toEqual('Password updated successfully');
+        done();
+    });
+
     it('should not update a trainee', async (done) => {
         const dataToUpdate = updateData.Success;
 
@@ -166,4 +185,20 @@ describe('Update Trainee', () => {
         done();
     });
 
+    it('should not update a trainee', async (done) => {
+        const dataToUpdate = updateData.EmptyEmail;
+
+        const res = await request(app1.app)
+            .put('/api/trainee')
+            .set('Authorization', token)
+            .set('Accept', 'application/json')
+            .send({
+                id: 'traineeId',
+                dataToUpdate,
+            });
+        const { error: { status, message } } = res.body;
+        expect(status).toEqual(404);
+        expect(message).toEqual('trainee not found for update');
+        done();
+    });
 });
