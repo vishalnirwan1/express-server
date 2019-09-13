@@ -39,10 +39,6 @@ class UserController {
         }
     }
 
-    // public generateToken( userDetails, secretKey) {
-    //     return jwt.sign(userDetails, secretKey, {expiresIn: '30m'})
-    // }
-
     public fetchUser(req, res) {
         res.send({
             status: 200,
