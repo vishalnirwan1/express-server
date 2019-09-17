@@ -9,6 +9,11 @@ module.exports = {
     'js',
   ],
   transformIgnorePatterns: ['[/\\\\]node_modules[/\\\\].+\\.(js|jsx)$'],
+  testPathIgnorePatterns: [
+    '/build/',
+    '/dist/',
+    '/node_modules/',
+  ],
   transform: {
     '^.+\\.tsx?$': 'ts-jest',
     '^.+\\.js$': 'babel-jest',
