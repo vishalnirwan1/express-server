@@ -15,14 +15,14 @@ class TraineeController {
             const traineeList = await userRepository.getAll(query, req.query);
             console.log('inside get trainee');
 
-            res.send([
+            res.send(
                 {
                     count,
                     status: 200,
                     message: 'All trainees fetched successfully',
                     data: traineeList,
                 },
-            ]);
+            );
         } catch (err) {
             next({
                 message: err,
