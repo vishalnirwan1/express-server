@@ -6,6 +6,26 @@ import UserRepository from '../../repositories/user/UserRepository';
 const userRepository = new UserRepository();
 
 class TraineeController {
+
+    public async upload(req: Request, res: Response, next) {
+        console.log('>>>>>>>', req.file);
+        const createTrainee = await userRepository.createUpload(req.file.path);
+
+        // console.log('>>>>>>>', err);
+        // if (err) {
+        //     // console.log(err);
+        //     res.send({
+        //         message: err,
+        //         status: 400,
+        //     });
+        // }
+        // else {
+        res.send({
+            message: 'file uploaded successfully',
+            status: 200,
+        });
+        // }
+    }
     public async get(req: Request, res: Response, next) {
         try {
             const countQuery = { role: 'trainee', deletedAt: { $exists: false } };

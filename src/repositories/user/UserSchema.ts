@@ -20,6 +20,10 @@ export default class UserSchema extends VersionableSchema {
                 required: false,
                 type: String,
             },
+            imageName: {
+                required: false,
+                type: String,
+            },
         };
         super(baseSchema, option);
     }

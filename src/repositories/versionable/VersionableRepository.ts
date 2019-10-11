@@ -10,6 +10,23 @@ export default class VersionableRepository<D extends mongoose.Document, M extend
         this.modelType = modelType;
     }
 
+    public async createUpload(options): Promise<D> {
+        console.log('@@@@@@@@@', options);
+        const id = VersionableRepository.generateObjectId();
+        const model = {
+            ...options,
+            _id: id,
+            name: 'vidhal',
+            email: 'fvfv@gmail.com',
+            password: '123',
+            originalId: id,
+            createdBy: 'me',
+
+        };
+        const record = await this.modelType.create(model);
+        return record.toObject();
+    }
+
     public async createUser(options): Promise<D> {
         const id = VersionableRepository.generateObjectId();
         const model = {
