@@ -1,0 +1,522 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "description": "Training Management System",
+        "version": "1.0.0",
+        "title": "APIs using Express Server",
+        "contact": {
+            "email": "vishal@successive.tech"
+        }
+    },
+    "host": "localhost:9000",
+    "basePath": "/api",
+    "schemes": [
+        "http"
+    ],
+    "paths": {
+        "/trainee": {
+            "post": {
+                "tags": [
+                    "Trainee"
+                ],
+                "summary": "Add a new trainee",
+                "description": "",
+                "operationId": "addTrainee",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request body",
+                        "description": "trainee details for creation",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TraineePost"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "schema": {
+                            "$ref": "#/definitions/TraineePostRes"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized Access",
+                        "schema": {
+                            "$ref": "#/definitions/TokenExpire"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Trainee"
+                ],
+                "summary": "Update an existing trainee",
+                "description": "Updates an exisitng trainee",
+                "operationId": "UpdateTrainee",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "in": "body",
+                        "name": "Request body",
+                        "description": "",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/TraineePut"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "schema": {
+                            "$ref": "#/definitions/TraineePutRes"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized Access",
+                        "schema": {
+                            "$ref": "#/definitions/TokenExpire"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
+            },
+            "get": {
+                "tags": [
+                    "Trainee"
+                ],
+                "summary": "Fetch all trainees",
+                "description": "",
+                "operationId": "findTrainee",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "skip",
+                        "in": "query",
+                        "description": "skip for pagination",
+                        "required": false,
+                        "type": "integer"
+                    },
+                    {
+                        "name": "limit",
+                        "in": "query",
+                        "description": "limit for pagination",
+                        "required": false,
+                        "type": "integer"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "An array of trainees",
+                        "schema": {
+                            "$ref": "#/definitions/TraineeGetRes"
+                        }
+                    },
+                    "401": {
+                        "description": "Token Expiration",
+                        "schema": {
+                            "$ref": "#/definitions/TokenExpire"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
+            }
+        },
+        "/trainee/{id}": {
+            "delete": {
+                "tags": [
+                    "Trainee"
+                ],
+                "summary": "Deletes a trainee",
+                "description": "",
+                "operationId": "deleteTrainee",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Unique id of the trainee that is to be deleted",
+                        "required": true,
+                        "type": "string"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful Response",
+                        "schema": {
+                            "$ref": "#/definitions/TraineeDeleteRes"
+                        }
+                    },
+                    "401": {
+                        "description": "Token Expiration",
+                        "schema": {
+                            "$ref": "#/definitions/TokenExpire"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
+            }
+        },
+        "/user/profile": {
+            "get": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "",
+                "description": "Details of the current user",
+                "operationId": "",
+                "produces": [
+                    "application/json"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success Response",
+                        "schema": {
+                            "$ref": "#/definitions/UserGetRes"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized Access",
+                        "schema": {
+                            "$ref": "#/definitions/TokenExpire"
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
+            }
+        },
+        "/user/login": {
+            "post": {
+                "tags": [
+                    "User"
+                ],
+                "summary": "",
+                "description": "",
+                "operationId": "loginUser",
+                "produces": [
+                    "application/json"
+                ],
+                "parameters": [
+                    {
+                        "name": "Login Credentials",
+                        "in": "body",
+                        "description": "Login Credentials",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/User"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "successful operation",
+                        "schema": {
+                            "$ref": "#/definitions/UserLoginRes"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "securityDefinitions": {
+        "Bearer": {
+            "type": "apiKey",
+            "name": "Authorization",
+            "in": "header"
+        }
+    },
+    "definitions": {
+        "UserLoginRes": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "example": 200
+                },
+                "message": {
+                    "type": "string",
+                    "example": "User fetched"
+                },
+                "data": {
+                    "type": "string",
+                    "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI1ZDZmNDc0N2IxYjU5NTMyMDU0NmI0NTMiLCJuYW1lIjoiVmlzaGFsIiwiZW1haWwiOiJ2aXNoYWxAZ21haWwuY29tIiwicGFzc3dvcmQiOiIkMmIkMTAkY1hqUE5EY0p2VlI3aVY2L28uYXhOT1VsTG5tVHJZL1FycE5OQ3VK"
+                }
+            }
+        },
+        "TraineeDeleteRes": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "properties": {
+                        "id": {
+                            "type": "string",
+                            "example": "5d7099c79bd9da686843806c"
+                        }
+                    }
+                },
+                "message": {
+                    "type": "string",
+                    "example": "trainee deleted succesfully"
+                },
+                "status": {
+                    "type": "string",
+                    "example": 200
+                }
+            }
+        },
+        "TraineePutRes": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "$ref": "#/definitions/TraineePut"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "trainee updated succesfully"
+                },
+                "status": {
+                    "type": "string",
+                    "example": 200
+                }
+            }
+        },
+        "TraineePostRes": {
+            "type": "object",
+            "properties": {
+                "data": {
+                    "type": "object",
+                    "$ref": "#/definitions/TraineePost"
+                },
+                "message": {
+                    "type": "string",
+                    "example": "trainee created succesfully"
+                },
+                "status": {
+                    "type": "string",
+                    "example": 200
+                }
+            }
+        },
+        "UserGetRes": {
+            "type": "object",
+            "properties": {
+                "status": {
+                    "type": "string",
+                    "example": 200
+                },
+                "message": {
+                    "type": "string",
+                    "example": "User fetched"
+                },
+                "data": {
+                    "$ref": "#/definitions/UserDetails"
+                }
+            }
+        },
+        "TraineeGetRes": {
+            "type": "object",
+            "properties": {
+                "count": {
+                    "type": "string",
+                    "example": "1"
+                },
+                "status": {
+                    "type": "string",
+                    "example": 200
+                },
+                "message": {
+                    "type": "string",
+                    "example": "all trainees fetched"
+                },
+                "data": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/TraineeDetails"
+                    }
+                }
+            }
+        },
+        "UserDetails": {
+            "properties": {
+                "_id": {
+                    "type": "string",
+                    "example": "5d6f93dae4a9e958c46cf750"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "vishal12@gmail.com"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "divya"
+                },
+                "craetedBy": {
+                    "type": "string",
+                    "example": "5d6f4747b1b595320546b453"
+                },
+                "originalId": {
+                    "type": "string",
+                    "example": "5d6f93dae4a9e958c46cf750"
+                },
+                "role": {
+                    "type": "string",
+                    "example": "head-trainer"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "example": "2019-09-04T10:37:14.807Z"
+                }
+            }
+        },
+        "TraineeDetails": {
+            "properties": {
+                "_id": {
+                    "type": "string",
+                    "example": "5d6f93dae4a9e958c46cf750"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "vishal12@gmail.com"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "divya"
+                },
+                "craetedBy": {
+                    "type": "string",
+                    "example": "5d6f4747b1b595320546b453"
+                },
+                "originalId": {
+                    "type": "string",
+                    "example": "5d6f93dae4a9e958c46cf750"
+                },
+                "role": {
+                    "type": "string",
+                    "example": "trainee"
+                },
+                "createdAt": {
+                    "type": "string",
+                    "example": "2019-09-04T10:37:14.807Z"
+                }
+            }
+        },
+        "User": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "vishal@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "Training@123"
+                }
+            }
+        },
+        "TraineePost": {
+            "type": "object",
+            "required": [
+                "name",
+                "email",
+                "password"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string",
+                    "example": "Yuvraj"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "yuvraj@gmail.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "123"
+                }
+            }
+        },
+        "TraineePut": {
+            "type": "object",
+            "required": [
+                "id",
+                "dataToUpdate"
+            ],
+            "properties": {
+                "id": {
+                    "type": "string",
+                    "example": "12334553Q"
+                },
+                "dataToUpdate": {
+                    "type": "object",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/TraineePost"
+                        }
+                    ]
+                }
+            }
+        },
+        "TokenExpire": {
+            "type": "object",
+            "properties": {
+                "error": {
+                    "type": "object",
+                    "properties": {
+                        "message": {
+                            "type": "string",
+                            "example": "Unauthorized access"
+                        },
+                        "status": {
+                            "type": "string",
+                            "example": 401
+                        }
+                    }
+                },
+                "timestamp": {
+                    "type": "string",
+                    "example": "2019-09-05T08:01:11.854Z"
+                }
+            }
+        }
+    }
+}
